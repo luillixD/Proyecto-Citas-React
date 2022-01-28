@@ -11,6 +11,18 @@ const Formulario = ({pacientes, setPacientes, paciente}) => {
 
   const [error, setError] = useState(false);
 
+  useEffect(()=> {
+    /*Valida que un arreglo este vacio */
+    if(Object.keys(paciente).length>0){
+       setNombre(paciente.nombre);
+       setPropietario(paciente.propietario);
+       setEmail(paciente.email);
+       setFecha(paciente.fecha);
+       setSintomas(paciente.sintomas);
+    }
+  },[paciente]);
+
+
   const generarId = () => {
     const ramdom = Math.random().toString(36).substring(2);
     const fecha = Date.now().toString(36);
@@ -33,11 +45,19 @@ const Formulario = ({pacientes, setPacientes, paciente}) => {
         propietario,
         email,
         fecha,
-        sintomas,
-        id: generarId()
+        sintomas
+      }
+      if(paciente.id){
+        //Editando el registro
+        objetoPaciente.id = paciente.id;
+        const pacienteActualizado = pacientes.map(pacienteState =>pacienteState.id === paciente.id ? objetoPaciente : pacienteState); 
+        setPacientes(pacienteActualizado);
+      }else{
+        //Nuevo registro
+        objetoPaciente.id = generarId()
+        setPacientes([...pacientes, objetoPaciente]);
       }
 
-      setPacientes([...pacientes, objetoPaciente]);
       //reinica el form
       setNombre('');
       setPropietario('');
@@ -105,10 +125,10 @@ const Formulario = ({pacientes, setPacientes, paciente}) => {
           onChange={(e)=> setSintomas(e.target.value)}
           ></textarea>
         </div>
-        <input type="submit" className="border-2 border-indigo-700 w-full p-3 text-indigo-700 uppercase font-bold cursor-pointer transition-all hover:text-white hover:bg-indigo-700 " value="Agregar paciente" />
+        <input type="submit" className="border-2 border-indigo-700 w-full p-3 text-indigo-700 uppercase font-bold cursor-pointer transition-all hover:text-white hover:bg-indigo-700 " value={paciente.id?"Editar paciente":"Nuevo paciente"} />
       </form>
     </div>
-    
+
   );
 
 };

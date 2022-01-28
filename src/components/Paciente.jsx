@@ -1,4 +1,3 @@
-
 const Paciente = ({paciente,setPaciente}) => {
     const {nombre,propietario,email,fecha,sintomas} = paciente;
   return(
